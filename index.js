@@ -26,6 +26,8 @@ export default function Viewer(el, zooms) {
 
 Viewer.prototype = {
     init: function() {
+        this.dragger = new Dragger(this);
+
         var src = d.data(this.element, 'viewerSrc');
 
         if (!src || !d.is(this.element, 'img')) {
@@ -38,7 +40,6 @@ Viewer.prototype = {
 
         this.element.setAttribute('src', src);
         this.element.removeAttribute('srcset');
-        this.dragger = new Dragger(this);
     },
 
     on: function(event, handler) {

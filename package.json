@@ -4,7 +4,7 @@
   "description": "Progressive web viewer for images or any other html element",
   "main": "index.js",
   "scripts": {
-    "start": "webpack demo/script.js demo/script.dist.js --watch & http-server demo",
+    "start": "webpack demo/script.js demo/script.dist.js --devtool source-map --watch & http-server demo",
     "prettier": "prettier index.js --single-quote --tab-width 4 --write"
   },
   "repository": {

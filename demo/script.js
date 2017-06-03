@@ -1,11 +1,14 @@
-import Viewer from '../'
+import Viewer from '../';
 
-var v = new Viewer(document.querySelector('img'));
+//Init the viewer
+var myViewer = new Viewer(document.querySelector('.viewer img'));
 
-v.on('zoom', function (zoom) {
-    console.log(zoom);
+//Zoom on click the button
+document.querySelector('.viewer-button').addEventListener('click', function () {
+    myViewer.zoom();
 });
 
-document.getElementById('zoom').addEventListener('click', function () {
-    v.zoom();
+//Register a zoom event
+myViewer.on('zoom', function (zoom) {
+    console.log(zoom);
 });

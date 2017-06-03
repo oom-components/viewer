@@ -24,7 +24,9 @@ Image viewer with the following features:
 Let's say we have the following html code:
 
 ```html
-<figure id="viewer">
+<button class="viewer-button">Zoom</button>
+
+<figure class="viewer">
 	<picture>
 		<source srcset="http://placehold.it/2000x1200" media="(min-width:2000px)">
 		<source srcset="http://placehold.it/1500x900" media="(min-width:1500px)">
@@ -33,17 +35,15 @@ Let's say we have the following html code:
 		<img srcset="http://placehold.it/500x300" data-viewer-src="http://placehold.it/2000x1200">
 	</picture>
 </figure>
-
-<button id="viewer-button">Zoom</button>
 ```
 Note the `data-viewer-src` attribute in the image. It's used to load a full quality image on zoom. Then, write some css code (optional but recommended):
 
 ```css
-.pw-viewer {
+.viewer {
 	overflow: hidden;
 	margin: 0;
 }
-img {
+.viewer img {
 	max-width: 100%;
 	display: block;
 	margin: 0 auto;
@@ -56,10 +56,10 @@ And finally init the viewer:
 import Viewer from 'pw-viewer';
 
 //Init the viewer
-var myViewer = new Viewer(document.querySelector('#viewer img'));
+var myViewer = new Viewer(document.querySelector('.viewer img'));
 
 //Zoom on click the button
-document.getElementById('viewer-button').addEventListener('click', function () {
+document.querySelector('.viewer-button').addEventListener('click', function () {
     myViewer.zoom();
 });
 
