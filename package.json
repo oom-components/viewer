@@ -1,0 +1,35 @@
+{
+  "name": "pw-viewer",
+  "version": "0.1.0",
+  "description": "Progressive web viewer for images or any other html element",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack demo/script.js demo/script.dist.js --watch & http-server demo",
+    "prettier": "prettier index.js --single-quote --tab-width 4 --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/progressive-web-components/viewer.git"
+  },
+  "keywords": [
+    "progressive",
+    "web",
+    "component",
+    "image",
+    "viewer"
+  ],
+  "author": "Oscar Otero <oom@oscarotero.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/progressive-web-components/viewer/issues"
+  },
+  "homepage": "https://github.com/progressive-web-components/viewer#readme",
+  "devDependencies": {
+    "prettier": "^1.4.1",
+    "webpack": "^2.6.1"
+  },
+  "dependencies": {
+    "d_js": "^1.9.0",
+    "unidragger": "^2.2.2"
+  }
+}

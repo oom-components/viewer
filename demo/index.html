@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<style type="text/css">
+	img {
+		max-width: 100%;
+		display: block;
+		margin: 0 auto;
+	}
+	.js-viewer {
+		overflow: hidden;
+		margin: 0;
+	}
+</style>
+<body>
+<figure class="js-viewer">
+	<picture class="js-viewer-main">
+		<source srcset="http://placehold.it/2000x1200" media="(min-width:2000px)">
+		<source srcset="http://placehold.it/1500x900" media="(min-width:1500px)">
+		<source srcset="http://placehold.it/1000x600" media="(min-width:1000px)">
+		<source srcset="http://placehold.it/500x300" media="(min-width:500px)">
+		<img srcset="http://placehold.it/500x300" alt="Chica sentada" data-viewer-src="http://placehold.it/2000x1200">
+	</picture>
+</figure>
+<button id="zoom">Zoom</button>
+<script type="text/javascript" src="script.dist.js"></script>
+</body>
+</html>
