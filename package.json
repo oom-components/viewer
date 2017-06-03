@@ -4,8 +4,10 @@
   "description": "Progressive web viewer for images or any other html element",
   "main": "index.js",
   "scripts": {
-    "start": "webpack demo/script.js demo/script.dist.js --devtool source-map --watch & http-server demo",
-    "prettier": "prettier index.js --single-quote --tab-width 4 --write"
+    "start": "npm run compile && webpack demo/script.js demo/script.dist.js --devtool source-map & http-server",
+    "compile": "babel src/index.js -o index.js --presets es2015",
+    "prettier": "prettier index.js --single-quote --tab-width 4 --write",
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,10 @@
   },
   "homepage": "https://github.com/progressive-web-components/viewer#readme",
   "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-es2015": "^6.24.1",
     "prettier": "^1.4.1",
     "webpack": "^2.6.1"
   },

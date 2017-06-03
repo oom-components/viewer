@@ -11,13 +11,43 @@ Image viewer with the following features:
 ## Requirements
 
 * NPM to install the package and the dependencies
-* Webpack (or any other javascript loader with ES6 modules support)
+* Webpack + Babel (or any other javascript loader with ES6 support)
 
 ## Browser supports
 
 * Any modern web
-* IE11
+* Not tested in IE but should work (at least in IE11)
 
+## Install
+
+Use `npm` or yarn to install this package
+
+```
+npm install pw-viewer
+```
+
+You should install also some dev dependencies:
+
+```
+npm install webpack babel-core babel-loader
+```
+
+And configure webpack to use babel:
+
+```
+module.exports = {
+    module: {
+        rules: [
+            {
+                test: /wp-viewer\/.*\.js$/,
+                use: {
+                    loader: 'babel-loader',
+                }
+            }
+        ]
+    }
+};
+```
 
 ## Usage
 
