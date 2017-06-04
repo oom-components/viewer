@@ -1,12 +1,12 @@
 {
   "name": "pw-viewer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Progressive web viewer for images or any other html element",
   "main": "index.js",
   "scripts": {
-    "start": "npm run compile && webpack demo/script.js demo/script.dist.js --devtool source-map & http-server",
+    "start": "webpack --config demo/webpack.config.js --watch & http-server demo -c-1",
     "compile": "babel src/index.js -o index.js --presets es2015",
-    "prettier": "prettier index.js --single-quote --tab-width 4 --write",
+    "prettier": "prettier src/*.js demo/script.js --single-quote --tab-width 4 --write",
     "prepublish": "npm run compile"
   },
   "repository": {

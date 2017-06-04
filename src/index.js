@@ -15,7 +15,7 @@ class Dragger extends Unidragger {
         this.offsetY = 0;
     }
 
-    stop(handler) {
+    stop() {
         this.unbindHandles();
     }
 
