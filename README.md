@@ -34,7 +34,8 @@ npm install pw-viewer
 Let's say we have the following html code:
 
 ```html
-<button class="viewer-button">Zoom</button>
+<button class="viewer-zoom">Zoom</button>
+<button class="viewer-reset">Reset</button>
 
 <figure class="viewer">
     <picture>
@@ -62,6 +63,7 @@ The following css code is optional (but recommended):
     max-width: 100%;
     display: block;
     margin: 0 auto;
+    transition: transform .5s;
 }
 ```
 
@@ -76,9 +78,14 @@ import Viewer from 'pw-viewer';
 var myViewer = new Viewer(document.querySelector('.viewer img'));
 
 //Zoom on click the button
-document.querySelector('.viewer-button')
-    .addEventListener('click', event => myViewer.zoom());
+document.querySelector('.viewer-zoom')
+    .addEventListener('click', event => {
+      myViewer.transform({ scale: 1.5 }); //zoom
+      myViewer.drag(true); //enable dragging
+    });
 
-//Register a zoom event
-myViewer.on('zoom', (zoom) => console.log(zoom));
+document.querySelector('.viewer-reset')
+    .addEventListener('click', event => {
+      myViewer.reset(); //Remove zoom and dragging
+    });
 ```

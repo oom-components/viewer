@@ -2,114 +2,75 @@ import d from 'd_js';
 import Unidragger from 'unidragger';
 
 class Dragger extends Unidragger {
-
-    constructor (viewer) {
+    constructor(viewer) {
         super();
         this.viewer = viewer;
         this.handles = [viewer.element];
-    }
-
-    start() {
-        this.bindHandles();
         this.offsetX = 0;
         this.offsetY = 0;
     }
 
-    stop() {
+    start() {
+        this.bindHandles();
+    }
+
+    stop(reset) {
         this.unbindHandles();
+
+        if (reset) {
+            this.offsetX = 0;
+            this.offsetY = 0;
+        }
+    }
+
+    dragStart(event, pointer) {
+        this.transition = d.css(this.viewer.element, 'transition');
+        d.css(this.viewer.element, 'transition', 'none');
+        console.log(this.viewer.transforms);
     }
 
     dragMove(event, pointer, moveVector) {
         this.lastMove = moveVector;
-        d.css(this.viewer.element, 'transition', 'none');
 
         this.viewer.transform({
-            translate: [this.offsetX + moveVector.x, this.offsetY + moveVector.y]
+            translate: [
+                this.offsetX + moveVector.x,
+                this.offsetY + moveVector.y
+            ]
         });
     }
 
     dragEnd(event, pointer) {
         this.offsetX += this.lastMove.x;
         this.offsetY += this.lastMove.y;
+        d.css(this.viewer.element, 'transition', this.transition);
     }
 }
 
 export default class Viewer {
-
     constructor(el, zooms) {
         this.element = el;
         this.transforms = { translate: false, scale: false };
-        this.level = 0;
-        this.events = { zoom: [] };
-        this.zooms = zooms || [
-            {
-                scale: 1,
-                drag: false
-            },
-            {
-                scale: 1.5,
-                drag: true
-            },
-            {
-                scale: 2.5,
-                drag: true
+    }
+
+    reset() {
+        this.drag(false, true);
+        this.transform({
+            translate: [0, 0],
+            scale: 1
+        });
+    }
+
+    drag(enable, reset) {
+        if (enable) {
+            if (!this.dragger) {
+                this.dragger = new Dragger(this);
             }
-        ];
 
-        this.zooms[1].init = true;
-    }
-
-    init() {
-        this.dragger = new Dragger(this);
-
-        var src = d.data(this.element, 'viewerSrc');
-
-        if (!src || !d.is(this.element, 'img')) {
-            return;
-        }
-
-        if (d.is(this.element.parentElement, 'picture')) {
-            d.remove({ source: this.element.parentElement });
-        }
-
-        this.element.setAttribute('src', src);
-        this.element.removeAttribute('srcset');
-    }
-
-    on(event, handler) {
-        this.events[event].push(handler);
-    }
-
-    zoom() {
-        ++this.level;
-
-        if (this.level >= this.zooms.length) {
-            this.level = 0;
-        }
-
-        d.css(this.element, 'transition', 'transform .5s');
-
-        const zoom = this.zooms[this.level];
-
-        if (zoom.init) {
-            this.init();
-            zoom.init = false;
-        }
-
-        this.transforms.scale = zoom.scale;
-
-        if (zoom.drag) {
             this.dragger.start();
         } else if (this.dragger) {
-            this.dragger.stop();
-            this.transforms.translate = [0, 0];
+            this.dragger.stop(reset);
         }
-
-        this.transform();
-
-        this.events.zoom.forEach(function(handler) {
-            handler.call(this, zoom);
-        }, this);
     }
 
     transform(transforms) {
@@ -119,6 +80,10 @@ export default class Viewer {
             for (let name in transforms) {
                 this.transforms[name] = transforms[name];
             }
+        }
+
+        if (this.transforms.scale > 1) {
+            loadFullResolutionImage(this.element);
         }
 
         for (let name in this.transforms) {
@@ -147,4 +112,20 @@ export default class Viewer {
 
         d.css(this.element, 'transform', css.length ? css.join(' ') : 'none');
     }
-};
+}
+
+function loadFullResolutionImage(element) {
+    const src = d.data(element, 'viewerSrc');
+
+    if (!src || !d.is(element, 'img')) {
+        return;
+    }
+
+    if (d.is(element.parentElement, 'picture')) {
+        d.remove({ source: element.parentElement });
+    }
+
+    element.setAttribute('src', src);
+    element.removeAttribute('srcset');
+    d.data(element, 'viewerSrc', '');
+}
