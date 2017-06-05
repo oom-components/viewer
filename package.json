@@ -1,6 +1,6 @@
 {
   "name": "pw-viewer",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Progressive web viewer for images or any other html element",
   "main": "index.js",
   "scripts": {
