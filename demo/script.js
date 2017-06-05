@@ -6,9 +6,6 @@ var myViewer = new Viewer(document.querySelector('.viewer img'));
 var currentStatus = 0;
 var statuses = [
     {
-        reset: true
-    },
-    {
         transform: {
             scale: 2
         },
@@ -24,15 +21,12 @@ var statuses = [
 
 //Zoom on click the button
 document.querySelector('.viewer-button').addEventListener('click', () => {
-    let status = statuses[++currentStatus];
+    let status = statuses[currentStatus++];
 
     if (!status) {
         currentStatus = 0;
-        status = statuses[currentStatus];
-    }
-
-    if (status.reset) {
         myViewer.reset();
+        return;
     }
 
     if (status.transform) {

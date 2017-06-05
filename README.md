@@ -78,14 +78,23 @@ import Viewer from 'pw-viewer';
 var myViewer = new Viewer(document.querySelector('.viewer img'));
 
 //Zoom on click the button
-document.querySelector('.viewer-zoom')
-    .addEventListener('click', event => {
-      myViewer.transform({ scale: 1.5 }); //zoom
-      myViewer.drag(true); //enable dragging
-    });
+document.querySelector('.viewer-zoom').addEventListener('click', event => {
+    myViewer.transform({ scale: 1.5 }); //zoom
+    myViewer.drag(true); //enable dragging
+});
 
-document.querySelector('.viewer-reset')
-    .addEventListener('click', event => {
-      myViewer.reset(); //Remove zoom and dragging
-    });
+document.querySelector('.viewer-reset').addEventListener('click', event => {
+    myViewer.reset(); //Reset zoom and disable dragging
+});
 ```
+
+## Demo
+
+To run the demo, just clone this repository enter in the directory and execute:
+
+```sh
+npm install
+npm start
+```
+
+You should see something in `http://localhost:8080/`
