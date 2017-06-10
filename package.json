@@ -1,6 +1,6 @@
 {
   "name": "pw-viewer",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Progressive web viewer for images or any other html element",
   "main": "index.js",
   "scripts": {
@@ -35,7 +35,7 @@
     "webpack": "^2.6.1"
   },
   "dependencies": {
-    "d_js": "^1.9.0",
-    "unidragger": "^2.2.2"
+    "alloyfinger": "^0.1.7",
+    "d_js": "^1.9.0"
   }
 }

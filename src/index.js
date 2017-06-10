@@ -1,76 +1,42 @@
 import d from 'd_js';
-import Unidragger from 'unidragger';
-
-class Dragger extends Unidragger {
-    constructor(viewer) {
-        super();
-        this.viewer = viewer;
-        this.handles = [viewer.element];
-        this.offsetX = 0;
-        this.offsetY = 0;
-    }
-
-    start() {
-        this.bindHandles();
-    }
-
-    stop(reset) {
-        this.unbindHandles();
-
-        if (reset) {
-            this.offsetX = 0;
-            this.offsetY = 0;
-        }
-    }
-
-    dragStart(event, pointer) {
-        this.transition = d.css(this.viewer.element, 'transition');
-        d.css(this.viewer.element, 'transition', 'none');
-        console.log(this.viewer.transforms);
-    }
-
-    dragMove(event, pointer, moveVector) {
-        this.lastMove = moveVector;
-
-        this.viewer.transform({
-            translate: [
-                this.offsetX + moveVector.x,
-                this.offsetY + moveVector.y
-            ]
-        });
-    }
-
-    dragEnd(event, pointer) {
-        this.offsetX += this.lastMove.x;
-        this.offsetY += this.lastMove.y;
-        d.css(this.viewer.element, 'transition', this.transition);
-    }
-}
+import AlloyFinger from 'alloyfinger';
 
 export default class Viewer {
-    constructor(el, zooms) {
+    constructor(el) {
         this.element = el;
-        this.transforms = { translate: false, scale: false };
+        this.transformsLimits = {};
+        this.transforms = {
+            translate: [0, 0],
+            scale: 1,
+            rotate: 0
+        };
     }
 
     reset() {
-        this.drag(false, true);
         this.transform({
             translate: [0, 0],
-            scale: 1
+            scale: 1,
+            rotate: 0
         });
     }
 
-    drag(enable, reset) {
-        if (enable) {
-            if (!this.dragger) {
-                this.dragger = new Dragger(this);
-            }
-
-            this.dragger.start();
-        } else if (this.dragger) {
-            this.dragger.stop(reset);
+    touch(options) {
+        if (this.dragger) {
+            this.untouch();
         }
+        options = options || { scale: true, translate: true };
+        this.dragger = createDragger(this, options);
+    }
+
+    untouch() {
+        if (this.dragger) {
+            this.dragger.destroy();
+            delete this.dragger;
+        }
+    }
+
+    limits(limits) {
+        this.transformsLimits = limits;
     }
 
     transform(transforms) {
@@ -86,32 +52,47 @@ export default class Viewer {
             loadFullResolutionImage(this.element);
         }
 
+        this.transforms.scale = range(
+            this.transforms.scale,
+            this.transformsLimits.scale
+        );
+
         for (let name in this.transforms) {
             let value = this.transforms[name];
 
-            if (!value) {
+            if (value === false) {
                 continue;
             }
 
             if (Array.isArray(value)) {
-                value = value
-                    .map(function(unit) {
-                        if (typeof unit === 'number') {
-                            return unit + 'px';
-                        }
-
-                        return unit;
-                    })
-                    .join(', ');
+                value = value.map(v => v + 'px').join(', ');
             }
 
-            if (value) {
-                css.push(name + '(' + value + ')');
+            if (name === 'rotate') {
+                value += 'deg';
             }
+
+            css.push(name + '(' + value + ')');
         }
 
         d.css(this.element, 'transform', css.length ? css.join(' ') : 'none');
     }
+}
+
+function range(value, minmax) {
+    if (!minmax) {
+        return value;
+    }
+
+    if (value < minmax[0]) {
+        return minmax[0];
+    }
+
+    if (value > minmax[1]) {
+        return minmax[1];
+    }
+
+    return value;
 }
 
 function loadFullResolutionImage(element) {
@@ -128,4 +109,52 @@ function loadFullResolutionImage(element) {
     element.setAttribute('src', src);
     element.removeAttribute('srcset');
     d.data(element, 'viewerSrc', '');
+}
+
+function createDragger(viewer, options) {
+    const element = viewer.element;
+    const transforms = viewer.transforms;
+    let initScale, initTransition;
+
+    let dragger = {
+        multipointStart: () => {
+            initScale = transforms.scale;
+        },
+        touchStart: () => {
+            initTransition = d.css(element, 'transition');
+            d.css(element, 'transition', 'none');
+        },
+        touchEnd: () => {
+            d.css(element, 'transition', initTransition);
+        }
+    };
+
+    if (options.scale) {
+        dragger.pinch = event => {
+            viewer.transform({
+                scale: initScale * event.zoom
+            });
+        };
+    }
+
+    if (options.translate) {
+        dragger.pressMove = event => {
+            viewer.transform({
+                translate: [
+                    transforms.translate[0] + event.deltaX,
+                    transforms.translate[1] + event.deltaY
+                ]
+            });
+        };
+    }
+
+    if (options.rotate) {
+        dragger.rotate = event => {
+            viewer.transform({
+                rotate: transforms.rotate + event.angle
+            });
+        };
+    }
+
+    return new AlloyFinger(element, dragger);
 }

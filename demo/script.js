@@ -3,37 +3,22 @@ import Viewer from '../src';
 //Init the viewer
 var myViewer = new Viewer(document.querySelector('.viewer img'));
 
-var currentStatus = 0;
-var statuses = [
-    {
-        transform: {
-            scale: 2
-        },
-        drag: true
-    },
-    {
-        transform: {
-            scale: 3
-        },
-        drag: true
-    }
-];
+//Limit the scale
+myViewer.limits({ scale: [1, 4] });
 
 //Zoom on click the button
+let zoomed = false;
+
 document.querySelector('.viewer-button').addEventListener('click', () => {
-    let status = statuses[currentStatus++];
-
-    if (!status) {
-        currentStatus = 0;
+    if (!zoomed) {
+        //scale and enable touch
+        myViewer.transform({ scale: 2.5 });
+        myViewer.touch();
+    } else {
+        //reset and disable touch
         myViewer.reset();
-        return;
+        myViewer.untouch();
     }
 
-    if (status.transform) {
-        myViewer.transform(status.transform);
-    }
-
-    if (status.drag) {
-        myViewer.drag(true);
-    }
+    zoomed = !zoomed;
 });

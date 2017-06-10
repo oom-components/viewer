@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.4.0 - UNRELEASED
+
+### Changed
+
+* Replaced Unidragger with AllowFinger, that provides more touch capacities, such pinch.
+* API change: removed `drag()` and create `touch()` and `untouch()`
+* `reset()` no longer unbind touch events. Use `untouch()`.
+
+### Added
+
+* New method `limits()` to define the transform limits (for example: min/max scale)
+
 ## 0.3.0 - 2017-06-05
 
 ### Changed
