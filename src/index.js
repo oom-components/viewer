@@ -1,5 +1,5 @@
 import d from 'd_js';
-import AlloyFinger from 'alloyfinger';
+import Pointer from './Pointer';
 
 export default class Viewer {
     constructor(el) {
@@ -10,6 +10,8 @@ export default class Viewer {
             scale: 1,
             rotate: 0
         };
+
+        this.pointer = new Pointer(this);
     }
 
     reset() {
@@ -20,23 +22,16 @@ export default class Viewer {
         });
     }
 
-    touch(options) {
-        if (this.dragger) {
-            this.untouch();
-        }
-        options = options || { scale: true, translate: true };
-        this.dragger = createDragger(this, options);
-    }
-
-    untouch() {
-        if (this.dragger) {
-            this.dragger.destroy();
-            delete this.dragger;
-        }
-    }
-
     limits(limits) {
         this.transformsLimits = limits;
+    }
+
+    drag(enable) {
+        if (enable || !arguments.length) {
+            this.pointer.start();
+        } else {
+            this.pointer.stop();
+        }
     }
 
     transform(transforms) {
@@ -109,52 +104,4 @@ function loadFullResolutionImage(element) {
     element.setAttribute('src', src);
     element.removeAttribute('srcset');
     d.data(element, 'viewerSrc', '');
-}
-
-function createDragger(viewer, options) {
-    const element = viewer.element;
-    const transforms = viewer.transforms;
-    let initScale, initTransition;
-
-    let dragger = {
-        multipointStart: () => {
-            initScale = transforms.scale;
-        },
-        touchStart: () => {
-            initTransition = d.css(element, 'transition');
-            d.css(element, 'transition', 'none');
-        },
-        touchEnd: () => {
-            d.css(element, 'transition', initTransition);
-        }
-    };
-
-    if (options.scale) {
-        dragger.pinch = event => {
-            viewer.transform({
-                scale: initScale * event.zoom
-            });
-        };
-    }
-
-    if (options.translate) {
-        dragger.pressMove = event => {
-            viewer.transform({
-                translate: [
-                    transforms.translate[0] + event.deltaX,
-                    transforms.translate[1] + event.deltaY
-                ]
-            });
-        };
-    }
-
-    if (options.rotate) {
-        dragger.rotate = event => {
-            viewer.transform({
-                rotate: transforms.rotate + event.angle
-            });
-        };
-    }
-
-    return new AlloyFinger(element, dragger);
 }

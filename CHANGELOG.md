@@ -8,9 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-* Replaced Unidragger with AllowFinger, that provides more touch capacities, such pinch.
-* API change: removed `drag()` and create `touch()` and `untouch()`
-* `reset()` no longer unbind touch events. Use `untouch()`.
+* Replaced Unidragger with standard Pointer Events, using jquery PEP for polyfill
+* `reset()` no longer unbind touch events. Use `drag(false)`.
 
 ### Added
 
