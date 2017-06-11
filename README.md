@@ -84,7 +84,8 @@ document.querySelector('.viewer-zoom').addEventListener('click', event => {
 });
 
 document.querySelector('.viewer-reset').addEventListener('click', event => {
-    myViewer.reset(); //Reset zoom and disable dragging
+    myViewer.reset(); //Reset transforms
+    myViewer.drag(false); //disable dragging
 });
 ```
 
