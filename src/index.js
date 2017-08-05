@@ -91,17 +91,17 @@ function range(value, minmax) {
 }
 
 function loadFullResolutionImage(element) {
-    const src = d.data(element, 'viewerSrc');
+    const src = element.dataset.viewerSrc;
 
-    if (!src || !d.is(element, 'img')) {
+    if (!src || !element.matches('img')) {
         return;
     }
 
-    if (d.is(element.parentElement, 'picture')) {
-        d.remove({ source: element.parentElement });
+    if (element.parentElement.matches('picture')) {
+        d.getAll({ source: element.parentElement }).forEach(source => source.remove());
     }
 
     element.setAttribute('src', src);
     element.removeAttribute('srcset');
-    d.data(element, 'viewerSrc', '');
+    element.dataset.viewerSrc = '';
 }
